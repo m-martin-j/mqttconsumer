@@ -2,6 +2,6 @@
 
 __author__ = """Martin Trat"""
 __email__ = 'trat@fzi.de'
-__version__ = '0.1.0'
+__version__ = '0.1.1'
 
 from .mqtt_consumer import MQTTConsumer, MQTTDataConsumer
