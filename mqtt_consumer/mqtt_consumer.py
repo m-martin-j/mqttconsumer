@@ -7,7 +7,6 @@ import time
 import json
 
 import paho.mqtt.client as mqtt
-import pandas as pd
 
 
 logger = logging.getLogger(__name__)
@@ -83,13 +82,18 @@ class MQTTConsumer(mqtt.Client):
 
 
 class MQTTDataConsumer(MQTTConsumer, Thread):
+    TOPIC_KEY_DATA = 'data'
+
     def __init__(
             self,
             broker_address: str,
             broker_port: int, 
             topics: dict,
             on_data_ready: Callable,
-            max_connect_retries: int = 20):
+            max_connect_retries: int = 20,
+            data_payload_field: str ='payload',
+            data_timestamp_field: str ='timestamp',
+            timestamp_key: str ='timestamp'):
         """Instantiates an MQTTDataConsumer object.
 
         Args:
@@ -102,6 +106,12 @@ class MQTTDataConsumer(MQTTConsumer, Thread):
                 column per field and a timestamp column).
             max_connect_retries (int, optional): The maximum number of reconnection
                 attempts. Defaults to 20.
+            data_payload_field (str, optional): The field in the received message containing the data
+                payload. Defaults to 'payload'.
+            data_timestamp_field (str, optional): The field in the received message containing the
+                timestamp. Defaults to 'timestamp'.
+            timestamp_key (str, optional): The key used for the timestamp in returned data.
+                Defaults to 'timestamp'.
         """
         expected_topic_keys = ['data']
         if not set(expected_topic_keys).issubset(topics.keys()):
@@ -113,6 +123,10 @@ class MQTTDataConsumer(MQTTConsumer, Thread):
         self.start()  # call MQTTConsumer's run in a separate thread
 
         self._on_data_ready = on_data_ready
+
+        self.data_payload_field = data_payload_field
+        self.data_timestamp_field = data_timestamp_field
+        self.timestamp_key = timestamp_key
 
         self._expected_n_fields = None
 
@@ -126,15 +140,28 @@ class MQTTDataConsumer(MQTTConsumer, Thread):
         while len(msgs) > 0:
             msg = msgs.pop(0)
 
-            if msg.topic == self.topics['data']:
+            if msg.topic == self.topics[self.TOPIC_KEY_DATA]:
                 data_msg = json.loads(msg.payload.decode(self.encoding))
-                data_payload = data_msg['payload']
-                timestamp = data_msg['timestamp']
-                logger.debug(f'Received data with timestamp {timestamp}.')
-                data_struc = self._structure_payload_data(data_payload)
-                data_struc.loc[:, 'timestamp'] = [timestamp]
-                # data_struc.set_index(pd.Index([timestamp]), append=False, inplace=True)
+                timestamp = self._get_timestamp(data_msg)
+                logger.info(f'Received data with timestamp {timestamp}.')
+                data_payload = self._get_payload_data(data_msg)
+                data_struc = self._structure_payload_data(data_payload, timestamp)
                 self._on_data_ready(data_struc)
+
+    def _get_payload_data(self, data_msg):
+        try:
+            ret = data_msg[self.data_payload_field]
+            logger.debug(f'Number of fields in payload: {len(ret.keys())}')
+            return ret
+        except KeyError:
+            raise ValueError(f'Cannot access data payload via field {self.data_payload_field}')
+
+    def _get_timestamp(self, data_msg, unknown_val='unknown'):
+        try:
+            return data_msg[self.data_timestamp_field]
+        except KeyError:
+            logger.warning(f'Cannot access data timestamp via field {self.data_timestamp_field}')
+            return unknown_val
 
     def _guess_payload_data_shape(
             self,
@@ -149,16 +176,19 @@ class MQTTDataConsumer(MQTTConsumer, Thread):
 
     def _structure_payload_data(
             self,
-            data: dict) -> pd.DataFrame:
-        """Structures data into pandas DataFrame format. 
+            data: dict,
+            timestamp: int) -> dict:
+        """Probes and structures data. TODO
 
         Args:
             data (dict): The data.
 
         Returns:
-            pd.DataFrame: Data as pd.DataFrame, shape: [1 x n_fields].
+            dict: The structured data.
         """
         self._guess_payload_data_shape(data)
-        ret = pd.DataFrame().from_dict(data, orient='columns')
-        logger.debug(f'Payload data shape: {len(ret.index)} x {len(ret.columns)}')
-        return ret
+
+        data[self.timestamp_key] = [timestamp]
+        # TODO: further structuring?
+
+        return data
