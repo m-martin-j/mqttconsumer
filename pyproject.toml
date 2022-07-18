@@ -1,11 +1,11 @@
 [tool.poetry]
 name = "mqttconsumer"
-version = "0.1.1"
+version = "0.1.2"
 description = ""
 authors = ["Martin Trat <trat@fzi.de>"]
 
 [tool.poetry.dependencies]
-python = "^3.9"
+python = ">=3.7"
 paho-mqtt = "^1.6.0"
 
 [tool.poetry.dev-dependencies]
