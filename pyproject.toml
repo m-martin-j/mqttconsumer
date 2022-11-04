@@ -5,6 +5,7 @@ description = "Framework for MQTT-Consuming Analytics Applications"
 readme = "DESCRIPTION.md"
 authors = ["Martin Trat <martin.trat@gmail.com>", "Simon Fritz <>"]
 homepage = "https://github.com/m-martin-j/mqttconsumer"
+repository = "https://github.com/m-martin-j/mqttconsumer"
 license = "MIT"
 classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
