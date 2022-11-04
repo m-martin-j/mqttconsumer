@@ -5,8 +5,7 @@ Based on [Eclipse Paho™ MQTT Python Client](https://github.com/eclipse/paho.mq
 ## Installation
 
 ### Dependencies
-* Python ^3.7.0
-* Poetry >= 1.1.13
+* Python ^3.7
 
 ### Setup
 Using pip, execute the following
@@ -15,6 +14,12 @@ pip install mqttconsumer
 ```
 
 ## Development
+
+### Dependencies
+* Python ^3.7
+* Poetry >= 1.1.13
+
+### Setup
 (Documentation: [Python-Poetry](https://python-poetry.org/))
 * install poetry
     ```sh
