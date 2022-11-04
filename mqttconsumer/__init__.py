@@ -1,4 +1,4 @@
-"""Top-level package for mqtt_comsumer."""
+"""Top-level package for mqttcomsumer."""
 
 __author__ = """Martin Trat, Simon Fritz"""
 __email__ = 'martin.trat@gmail.com, '
