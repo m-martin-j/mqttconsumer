@@ -1,5 +1,6 @@
 # MQTT Consumer
 Code for using MQTT in analytics-related applications.
+Based on [Eclipse Paho™ MQTT Python Client](https://github.com/eclipse/paho.mqtt.python).
 
 ## Installation
 
@@ -7,7 +8,13 @@ Code for using MQTT in analytics-related applications.
 * Python >= 3.9.*
 * Poetry >= 1.1.13
 
-### Via Poetry
+### Setup
+Using pip, execute the following
+```sh
+pip install mqttconsumer
+```
+
+## Development
 (Documentation: [Python-Poetry](https://python-poetry.org/))
 * install poetry
     ```sh
@@ -22,7 +29,9 @@ Code for using MQTT in analytics-related applications.
     python -m poetry install  # includes dev dependencies
     ```
 
-### As Package
-Instructions on how to add this code as released Python package, hosted in this GitLab can be found in
-[Confluence](https://confluence.fzi.de/display/Project194/Python+Package+Workflows).
+## To Do
+* Provide usage example
 
+## License
+Code is released under the [MIT License](LICENSE).
+All dependencies are copyright to the respective authors and released under the respective licenses listed in [LICENSE_LIBRARIES](LICENSE_LIBRARIES).
