@@ -3,6 +3,7 @@ name = "mqttconsumer"
 version = "0.1.2"
 description = ""
 authors = ["Martin Trat <martin.trat@gmail.com>", "Simon Fritz <>"]
+license = "MIT"
 
 [tool.poetry.dependencies]
 python = ">=3.7"
