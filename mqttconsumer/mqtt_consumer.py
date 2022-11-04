@@ -1,4 +1,6 @@
-# https://github.com/eclipse/paho.mqtt.python/blob/master/examples/client_sub-class.py
+"""
+Core code based on https://github.com/eclipse/paho.mqtt.python/blob/master/examples/client_sub-class.py
+"""
 
 from typing import Callable, List
 from threading import Thread
@@ -87,7 +89,7 @@ class MQTTDataConsumer(MQTTConsumer, Thread):
     def __init__(
             self,
             broker_address: str,
-            broker_port: int, 
+            broker_port: int,
             topics: dict,
             on_data_ready: Callable,
             max_connect_retries: int = 20,
@@ -136,7 +138,7 @@ class MQTTDataConsumer(MQTTConsumer, Thread):
         Args:
             msgs (List): The received messages.
         """
-        
+
         while len(msgs) > 0:
             msg = msgs.pop(0)
 
