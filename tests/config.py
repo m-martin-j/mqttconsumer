@@ -1,0 +1,3 @@
+
+MQTT_BROKER_ADDRESS = 'broker.hivemq.com'
+MQTT_BROKER_PORT = 1883
